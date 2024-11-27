@@ -1,38 +1,36 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+# IDE specifikus fájlok
+
+## IntelliJ IDEA
+.idea/
 *.iml
-*.ipr
+*.iws
+out/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
+## Eclipse
 .project
-.settings
-.springBeans
-.sts4-cache
+.classpath
+.settings/
+target/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+## NetBeans
+nbproject/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# OS-specifikus fájlok
+.DS_Store          # macOS
+Thumbs.db          # Windows
 
-### Mac OS ###
-.DS_Store
+# Java osztály fájlok (nem szükségesek, mert azok a target könyvtárban generálódnak)
+*.class
+
+# Javadoc generált fájlok
+**/apidocs/
+
+# Fájlok, amik Maven által generáltak, de nem tartalmazzák a build kimenetet
+*.log
+*.war
+*.jar
+*.ear
