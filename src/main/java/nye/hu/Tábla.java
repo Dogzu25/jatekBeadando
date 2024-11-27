@@ -3,6 +3,9 @@ package nye.hu;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 
 public class Tábla {
     public static final int SOROK = 6;
@@ -43,6 +46,17 @@ public class Tábla {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public void táblaMentésFájlba(String fájlNeve) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fájlNeve))) {
+            for (int i = 0; i < SOROK; i++) {
+                for (int j = 0; j < OSZLOPOK; j++) {
+                    writer.write(tábla[i][j]);
+                }
+                writer.newLine(); // Minden sor után új sor
+            }
+        }
     }
 
     // Szimbólumunk elhelyezése az oszlopban.

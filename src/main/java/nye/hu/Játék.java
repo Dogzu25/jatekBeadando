@@ -13,8 +13,13 @@ public class Játék {
     private Random random; // Lépés generálása random a robotnak.
 
     public Játék() {
-        tábla = new Tábla();
+        tábla = new Tábla();  // Tábla objektum létrehozása itt
         random = new Random();
+    }
+
+    public Játék(Tábla tábla, Random random) {
+        this.tábla = tábla;
+        this.random = random;
     }
 
     public void start() {
@@ -52,7 +57,7 @@ public class Játék {
             } else { // Ha a robot lép, random rak egy oszlopba.
                 int oszlop = randomOszlop();
                 tábla.szimbólumLerakása(oszlop, jelenlegiJátékos);
-                System.out.println("A robot a " + (oszlop + 1) +" oszlopba rakott."  );
+                System.out.println("A robot a " + (oszlop + 1) +". oszlopba rakott."  );
             }
 
             // Megvizsgáljuk, hogy győzött e valaki.
@@ -72,8 +77,26 @@ public class Játék {
             // Következő játékos.
             jelenlegiJátékos = (jelenlegiJátékos == JÁTÉKOS) ? ROBOT : JÁTÉKOS;
         }
+
+        // A nyertes mentése az adatbázisba
+        Adatbázis.saveHighScore(játékosNeve, 1); // Mivel egy játékot nyertünk, 1-et adunk a győzelmekhez
+
+        // Kiírjuk a legjobb pontszámokat
+        Adatbázis.displayHighScores();
+
+        System.out.println("Add meg a fájl nevét, ahova szeretnéd menteni a játék állását:");
+        scanner.nextLine();
+        String saveFilename = scanner.nextLine();
+        try {
+            tábla.táblaMentésFájlba(saveFilename);
+            System.out.println("A tábla mentve lett a következő fájlba: " + saveFilename);
+        } catch (IOException e) {
+            System.out.println("Hiba történt mentés közben: " + e.getMessage());
+        }
+
         scanner.close();
     }
+
 
 
     private int randomOszlop() {
