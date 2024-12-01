@@ -1,0 +1,18 @@
+Model:
+
+Az üzleti logikát és az adatokat tartalmazza.
+Osztályok:
+Tábla: Tárolja a játék állapotát, például az egyes mezők szimbólumait. Kezeli az oszlopokba történő szimbólumok lerakását, és ellenőrzi, hogy van-e győztes.
+Játék: Felügyeli a játék működését. Meghatározza a játékosok sorrendjét, kezeli a robot lépéseit, és a játék végén menti az állapotot.
+
+View:
+
+Felelős az adatok vizuális megjelenítéséért.
+Osztályok:
+JátékView: A játék során a tábla és üzenetek megjelenítését biztosítja. Bekéri a felhasználói bemeneteket (pl. a játékos nevét vagy lépéseit).
+
+Controller:
+
+A játék vezérléséért felelős.
+Osztályok:
+JátékController: Kommunikál a View-val és a Modellel. Kezeli a játék logikáját: feldolgozza a felhasználói lépéseket, frissíti a táblát, és értesíti a View-t a játék állapotának megjelenítéséről.
