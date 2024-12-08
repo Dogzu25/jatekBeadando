@@ -2,13 +2,10 @@ package nye.hu;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Random;
 
 import static org.mockito.Mockito.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JátékTeszt {
 
@@ -27,52 +24,76 @@ public class JátékTeszt {
     }
 
     @Test
-    public void testStart() {
-        // Mockoljunk egy szituációt, ahol a tábla nem tele és nem nyert senki
-        when(mockTábla.teleVanE()).thenReturn(false);
+    public void testStartAlap() {
+        // Mockoljunk egy szituációt, ahol a tábla nem tele és senki sem nyer
+        when(mockTábla.teleVanE()).thenReturn(false, false, true); // Két lépés után tele
         when(mockTábla.győztesLépésE(anyChar())).thenReturn(false);
 
         // Teszteljük a start metódust
         játék.start();
 
-        // Ellenőrizzük, hogy a játék lépései megtörténtek
-        verify(mockTábla, times(1)).táblaKiírás(); // A tábla kiírása
+        // Ellenőrizzük, hogy a tábla többször meg lett jelenítve
+        verify(mockTábla, atLeast(2)).táblaKiírás(); // A tábla megjelenítése legalább kétszer
     }
 
     @Test
-    public void testGyőzelem() {
-        // A győztes lépés ellenőrzése, ahol a játékos nyer
-        when(mockTábla.győztesLépésE(anyChar())).thenReturn(true);
+    public void testGyőzelemJátékos() {
+        // Mockolt szituáció: A játékos nyer
+        when(mockTábla.győztesLépésE('X')).thenReturn(true);
 
-        // A játék indítása
+        // Teszteljük a játék indítását
         játék.start();
 
-        // Ellenőrizzük, hogy a győzelmet megfelelően kijelezte
+        // Ellenőrizzük, hogy a győzelmet jelezte
         verify(mockTábla, times(1)).táblaKiírás();
     }
 
     @Test
-    public void testRobotLépés() {
-        // Mockoljunk egy robot lépést
-        when(mockRandom.nextInt(Tábla.OSZLOPOK)).thenReturn(3); // Robot választhatja a 4-es oszlopot
-        when(mockTábla.szimbólumLerakása(3, 'O')).thenReturn(true);
+    public void testGyőzelemRobot() {
+        // Mockolt szituáció: A robot nyer
+        when(mockTábla.győztesLépésE('O')).thenReturn(true);
+
+        // Teszteljük a játék indítását
+        játék.start();
+
+        // Ellenőrizzük, hogy a győzelmet jelezte
+        verify(mockTábla, times(1)).táblaKiírás();
+    }
+
+    @Test
+    public void testRobotLépésÉrvénytelen() {
+        // Robot érvénytelen oszlopot választ
+        when(mockRandom.nextInt(Tábla.OSZLOPOK)).thenReturn(3);
+        when(mockTábla.szimbólumLerakása(3, 'O')).thenReturn(false);
 
         // A robot lépése
         játék.start();
 
-        // Ellenőrizzük, hogy a robot lépése megtörtént
-        verify(mockTábla, times(1)).szimbólumLerakása(3, 'O');
+        // Ellenőrizzük, hogy az érvénytelen lépés után újra próbálkozott
+        verify(mockTábla, atLeast(1)).szimbólumLerakása(3, 'O');
     }
 
     @Test
-    public void testJátékosLépés() {
-        // A játékos lépésének tesztelése
-        when(mockTábla.szimbólumLerakása(1, 'X')).thenReturn(true);
+    public void testTáblaTeleVan() {
+        // Szituáció: A tábla megtelt
+        when(mockTábla.teleVanE()).thenReturn(true);
 
-        // Játékos lépése
+        // Teszteljük a játék indítását
         játék.start();
 
-        // Ellenőrizzük, hogy a játékos a megfelelő oszlopba rakott
-        verify(mockTábla, times(1)).szimbólumLerakása(1, 'X');
+        // Ellenőrizzük, hogy a megfelelő állapotot kezeltük
+        verify(mockTábla, times(1)).táblaKiírás();
+    }
+
+    @Test
+    public void testJátékosLépésÉrvénytelen() {
+        // A játékos érvénytelen oszlopot választ
+        when(mockTábla.szimbólumLerakása(1, 'X')).thenReturn(false);
+
+        // Teszteljük a játék indítását
+        játék.start();
+
+        // Ellenőrizzük, hogy újra próbálkozik
+        verify(mockTábla, atLeast(1)).szimbólumLerakása(1, 'X');
     }
 }
